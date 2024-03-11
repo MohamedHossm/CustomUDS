@@ -8,7 +8,6 @@
 //    { .SID = READ_DATA_BY_ID,  .isSub = FALSE, .SubFn = 0, 					.DID = 0, .frameType = SINGLE_FRAME}
 //};
 //
-
 #include "main.h"
 #include "UDS.h"
 

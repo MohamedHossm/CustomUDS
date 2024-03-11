@@ -87,8 +87,10 @@ TpStatusType TP_enuReceive(RxDataType *copyRxData) {
 		switch (pciCode) {
 		case SINGLE_FRAME:
 
-			copyRxData->RxDataPtr = &udsData.RxDataPtr[1];
+			copyRxData->RxDataPtr = &Global_u8PtrRxData[0];
 			copyRxData->RxDataLength = udsData.RxDataPtr[0] & 0x0F;
+			memcpy(Global_u8PtrRxData, udsData.RxDataPtr + 1, TP_NORMAL_FRAME_SIZE);
+
 			//TODO : Waiting for the UDS FILES un-comment later
 			local_status = TP_STATUS_OK;
 
@@ -230,7 +232,7 @@ TpStatusType TP_Transmit_MultiFrame(TP_HandleTypeDef *TP_Handle,
 
 	HAL_CAN_AddTxMessage(&hcan, &Global_MassageConf, local_CAN_Array,
 			&TxMailbox);
-	HAL_Delay( 1 ) ;
+	HAL_Delay(10 ) ;
 
 	while (local_index) {
 		local_u16PCI_len = ((local_indextemp) & 0x0F) | 0x20;
@@ -243,7 +245,7 @@ TpStatusType TP_Transmit_MultiFrame(TP_HandleTypeDef *TP_Handle,
 		}
 		HAL_CAN_AddTxMessage(&hcan, &Global_MassageConf, local_CAN_Array,
 				&TxMailbox);
-		HAL_Delay( 1 ) ;
+		HAL_Delay( 10 ) ;
 		local_index--;
 		local_indextemp++;
 	}

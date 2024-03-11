@@ -43,6 +43,9 @@ UDS_StatusTypeDef UDS_Receive(ResponseType *ptrDataRes,
 					local_send.udsData.udsDataPtr = UDS ;
 					TP_Transmit(&local_send, &local7labo7a);
 				}
+				if ((local_stUDSRxdata.RxDataPtr[0] - 0x40) == 0x27)
+					DataInfoPtr->DataLength = 0;
+
 				/***************************************************************************************************************/
 			} else if (SID_SuFun == UDS_SID) {
 				DataInfoPtr->DataPtr = &local_stUDSRxdata.RxDataPtr[1];
@@ -198,15 +201,16 @@ UDS_StatusTypeDef UDS_Transmit(uint8_t Local_UDS_index,
 	// array to send to TP
 	/*SID   Subfn   **/
 	TP_HandleTypeDef local_StructSend;
-	//uint8_t local_ArraySendToTp[2] = { 0, 0 };
+	uint8_t local_ArraySendToTp[2] = { 0, 0 };
 	if (Local_UDS_index < OPTIONS) {
 		// set SID 1st byte
 
 		if (DataFrames[Local_UDS_index].isSub == TRUE) {
 			// set SID 2ed byte
-
+			local_ArraySendToTp[0] =DataFrames[Local_UDS_index].SID ;
+			local_ArraySendToTp[1] =DataFrames[Local_UDS_index].SubFn ;
 			local_StructSend.udsData.udsDataPtr =
-					&DataFrames[Local_UDS_index].SID;
+					local_ArraySendToTp;
 			local_StructSend.udsData.udsDataLength = 2;
 		} else {
 
